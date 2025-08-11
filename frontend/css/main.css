@@ -1,0 +1,160 @@
+body {
+    background-color: white;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 10px;
+    padding-right: 10px;
+    /* margin: 15px; */
+}
+
+/* Typographic Styles */
+html {
+    background-color: white;
+    font-family: Segoe UI Light, sans-serif, Arial, Verdana;
+}
+
+.filterForm {
+    font-size: 1em;
+}
+
+.filterSelect {
+    font-size: 0.9em;
+}
+
+.image-container {
+    position: relative;
+    display: inline-block;
+}
+
+.checkbox-overlay {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 1;
+    background: rgba(255, 255, 255, 0.7);
+    padding: 4px;
+    border-radius: 4px;
+}
+
+.image-container img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
+.addCart {
+    width: 100%;
+}
+
+i.navbarCartIcon {
+    font-size: 18px;
+}
+
+h6.jwtTime {
+  font-size: 0.87em;
+}
+
+span.navbarCartNum {
+    font-size: 18px;
+    background-color: white;
+    color: black;
+}
+
+button.navbarCartBtn {
+    width: auto;
+    background-color: white;
+}
+
+button.navbarLoginBtn {
+    width: auto;
+}
+
+i.navbarLoginIcon {
+    font-size: 19px;
+}
+
+button.navbarLoginIconBtn {
+    width: auto;
+    background-color: white;
+    padding: 2px 2px 2px 2px;
+}
+
+.formFocus {
+  background-color: yellow;
+}
+
+div.cardFocus {
+  background-color: yellow;
+}
+
+table.modalTable {
+    font-size: 0.8em;
+}
+
+.plainLink {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Carousel Styles */
+
+.carouselSlide{
+  height: 400px;
+  background-color: green;
+  position: relative;
+  text-align: center;
+}
+
+.carouselContainer{
+  height: 500px;
+  width: 1200px;
+  padding-top: 50px;
+}
+
+.carouselText{
+  position: absolute;
+  bottom: -40px;
+  /* left: 350px; */
+  font-size: 25px;
+  font-family: Segoe UI Light, sans-serif, Arial, Verdana;
+  color: grey;
+}
+
+.carouselReviewContainer{
+  height: 550px;
+  width: 1200px;
+  margin-top: 50px;
+}
+
+.slick-prev:before,
+.slick-next:before {
+  color: blue; /* Replace 'red' with your desired color code or name */
+}
+
+.slick-prev {
+  display: "block";
+  left: 0.3% !important;
+  z-index: 1;
+  opacity: 1.0;
+}
+
+.slick-next {
+  display: "block";
+  right: 0.3% !important;
+  z-index: 1;
+  opacity: 1.0;
+}
+
+.slick-dots
+{
+  z-index: 1;
+}
+
+.reviewImg{
+  max-width: 150px;
+}
+
+table.paymentSummaryTable {
+    font-size: 0.8em;
+}
