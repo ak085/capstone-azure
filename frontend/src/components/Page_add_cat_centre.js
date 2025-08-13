@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
-import Category_single_card from './Category_single_card.js';
 import Capstone_config from '../config/Capstone_config.js';
+import Category_single_card from './Category_single_card.js';
 const config = Capstone_config();
 const categoryEP = config.categoryEP;
 
@@ -19,8 +19,26 @@ export default function Page_add_cat_centre(props) {
         // To do: add code for category HTTP get for page first render
         // after successful category HTTP get, setCategoryDetails(response.data)
         // if done correct, the Category Entries display at page bottom will populate
-
-    }, []);
+        
+        // swc added start
+        const retrivedJWT = localStorage.getItem('jwtToken');
+        const reqConfig = {
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Authorization": `Bearer ${retrivedJWT}`
+                            }
+}
+        axios.get(categoryEP, reqConfig)
+        .then(function (response)  {
+            console.log("Page_add_cat_centre: Categories HTTP GET request succcess");
+            setCategoryDetails(response.data);
+            console.log(response.data);
+        })
+        .catch(function (error) {
+            console.log("Page_add_cat_centre: use effect error:", error);
+        });
+        // swc added end
+    }, []); 
 
     console.log("Page_add_cat_centre: categoryDetails:", categoryDetails);
 
@@ -45,7 +63,48 @@ export default function Page_add_cat_centre(props) {
                                         // To do: add code for Add category HTTP post, followed by category HTTP get
                                         // after successful category HTTP get, setCategoryDetails(response.data)
                                         // if done correct, the Category Entries display at page bottom will populate
+                                        // swc added start
+                                        const reqBody = {
+                                            name: formInput.catname,
+                                            description: formInput.catdescription
+                                        }
+                                        const reqConfig = {
+                                            headers: {
+                                                "Content-Type": "application/json",
+                                                "Authorization": `Bearer ${retrivedJWT}`
+                                            }
+                                        }
 
+                                        axios.post(categoryEP, reqBody, reqConfig)
+                                                .then(function (response)  {
+                                                    console.log("Page_add_cat_centre: Categories HTTP post request succcess");
+                                                   // setCategoryDetails(response.data);
+                                                    console.log(response.data);
+                                                })
+                                                .then(function () {
+                                            // HTTP GET products after HTTP post create product
+                                                                                    const reqBody = {
+                                            name: formInput.catname,
+                                            description: formInput.catdescription
+                                        }
+                                        const reqConfig = {
+                                            headers: {
+                                                "Content-Type": "application/json",
+                                                "Authorization": `Bearer ${retrivedJWT}`
+                                            }
+                                        }
+                                                        axios.get(categoryEP, reqConfig)
+                                                        .then(function (response)  {
+                                                            console.log("Page_add_centre: Category HTTP GET request succcess");
+                                                            setCategoryDetails(response.data);
+                                                            console.log(response.data);
+                                                        })	
+                                                    })	
+                                                .catch(function (error) {
+                                                    console.log("Page_add_cat_centre: use effect error:", error);
+                                                });
+
+                                        // swc added end
                                     }
                                     else
                                     {
