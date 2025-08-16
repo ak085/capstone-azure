@@ -6,6 +6,7 @@ const jwtMiddleware = require("../middlewares/jwtMiddleware");
 
 // these services require bearer token to authenticate before response
 router.get('/', jwtMiddleware.verifyToken, jwtMiddleware.verifyAdmin, controller.readAllCategory);
+router.post('/filter', jwtMiddleware.verifyToken, jwtMiddleware.verifyAdmin, controller.filterCategoryBySearchKey);
 router.post('/', jwtMiddleware.verifyToken, jwtMiddleware.verifyAdmin, controller.addNewCategory);
 router.put('/:catid', jwtMiddleware.verifyToken, jwtMiddleware.verifyAdmin, controller.updateCategoryById);
 

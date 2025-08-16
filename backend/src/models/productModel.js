@@ -76,6 +76,17 @@ var productModel = {
         const VALUES = [data.name, data.description, data.brand, data.imageurl, data.catid, data.productid];
 
         pool.query(SQLSTATMENT, VALUES, callback);
+    },
+
+    filterProductsByUser : (data, callback) => {
+        const SQLSTATMENT = `
+            SELECT * from fashion_product
+            WHERE name like ? and description like ? and brand like ? and
+            catid BETWEEN ? AND ?;
+            `;
+        const VALUES = [data.name, data.description, data.brand, data.catidLower, data.catidUpper];
+
+        pool.query(SQLSTATMENT, VALUES, callback);
     }
 }
 

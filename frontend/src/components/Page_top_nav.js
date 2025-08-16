@@ -47,7 +47,10 @@ export default function Page_top_nav() {
                                         </Link>
                                         <Link to={'/delete'} className="dropdown-item">
                                             Delete Product
-                                        </Link>                                                                                
+                                        </Link>
+                                        <Link to={'/filterproduct'} className="dropdown-item">
+                                            Filter Product
+                                        </Link>                                                                                                                          
                                     </li>                               
                                 </ul>
                             </li>
@@ -68,7 +71,10 @@ export default function Page_top_nav() {
                                         </Link>
                                         <Link to={'/updatecategory'} className="dropdown-item">
                                             Update Category
-                                        </Link>                                                                              
+                                        </Link>
+                                        <Link to={'/filtercategory'} className="dropdown-item">
+                                            Filter Category
+                                        </Link>
                                     </li>                               
                                 </ul>
                             </li>
@@ -86,6 +92,9 @@ export default function Page_top_nav() {
                                     <li>
                                         <Link to={'/registeruser'} className="dropdown-item">
                                             Register User
+                                        </Link>
+                                        <Link to={'/filteruser'} className="dropdown-item">
+                                            Filter User
                                         </Link>
                                     </li>
                                 </ul>

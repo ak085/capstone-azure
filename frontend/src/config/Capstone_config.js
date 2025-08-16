@@ -5,10 +5,13 @@ export default function Capstone_config() {
 
     var config = {
         productEP: `${backendBaseURL}/product`,
+        productFilterEP: `${backendBaseURL}/product/filter/all`,
 		categoryEP: `${backendBaseURL}/category`,
+        categoryFilterEP: `${backendBaseURL}/category/filter`,
         userLoginEP: `${backendBaseURL}/user/login`,
         userAllEP: `${backendBaseURL}/user/all`,
         userRegisterEP: `${backendBaseURL}/user/register`,
+        userFilterEP: `${backendBaseURL}/user/filter`,
         defaultLoginEmail: "austin@ymail.com",
         defaultLoginPw: "iamaustin123"
     };

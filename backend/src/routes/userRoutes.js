@@ -9,6 +9,7 @@ const bcryptMiddleware = require("../middlewares/bcryptMiddleware");
 // admin web service to get user by email require jwt, get all fields except password
 router.get('/', jwtMiddleware.verifyToken, jwtMiddleware.verifyAdmin, userController.getUserByEmail);
 router.get('/all', jwtMiddleware.verifyToken, jwtMiddleware.verifyAdmin, userController.getEveryUser);
+router.post('/filter', jwtMiddleware.verifyToken, jwtMiddleware.verifyAdmin, userController.filterUsersBySearchKey);
 
 // admin web service to get user by id require jwt, get all fields except password
 router.get('/:userid', jwtMiddleware.verifyToken, jwtMiddleware.verifyAdmin, userController.getUserById);

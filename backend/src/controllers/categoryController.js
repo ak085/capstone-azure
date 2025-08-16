@@ -103,8 +103,71 @@ var categoryController =
             }
             
         }
-    }    
+    },
 
+    filterCategoryBySearchKey: (req, res, next) =>
+    {
+        const catname_exist = (typeof req.body.catname !== "undefined");
+		const catdescription_exist = (typeof req.body.catdescription !== "undefined");
+		const catid_exist = (typeof req.body.catid !== "undefined") && !(isNaN(req.body.catid));
+		const all_info_exist = catname_exist && catdescription_exist && catid_exist;
+
+        if (all_info_exist)
+        {
+            let catnameSearch = '%';
+            let catdescriptSearch = '%';
+            let catidLowerSearch = '0'; 
+            let catidUpperSearch = '9999';
+
+            if ((req.body.catname).length !== 0)
+            {
+                catnameSearch = '%' + req.body.catname + '%'; 
+            }
+
+            if ((req.body.catdescription).length !== 0)
+            {
+                catdescriptSearch = '%' + req.body.catdescription + '%';
+            }        
+
+            if ((req.body.catid).length !== 0)
+            {
+                catidLowerSearch = req.body.catid;
+                catidUpperSearch = req.body.catid;
+            }
+
+            const data = {
+                catname: catnameSearch,
+                catdescription: catdescriptSearch,
+                catidLower: catidLowerSearch,
+				catidUpper: catidUpperSearch
+            }
+
+			const callback = (error, results, fields) => {
+				if (error) 
+				{
+					console.error("Error filterCategoryBySearchKey:", error);
+					res.status(500).json(error);
+				} 
+				else 
+				{
+					if(results.length == 0)
+                    {
+                        res.status(404).json({ message: "Category not found"});
+                    }
+					else
+                    {
+                        res.status(200).json(results);
+                    }
+				}
+			}            
+
+            model.filterCategoryByUser(data, callback);
+        }
+        else
+        {
+            res.status(500).json({ message: "Required http request body key and values are not provided as required by this web service."});
+        }
+    }    
 }
 
 module.exports = categoryController;

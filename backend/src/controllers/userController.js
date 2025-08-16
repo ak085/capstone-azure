@@ -213,6 +213,78 @@ var userController = {
         }
         
         model.getAllUsers(callback);
+    },
+
+    filterUsersBySearchKey: (req, res, next) =>
+    {
+        const name_exist = (typeof req.body.name !== "undefined");
+		const email_exist = (typeof req.body.email !== "undefined");
+        const role_exist = (typeof req.body.role !== "undefined");
+		const userid_exist = (typeof req.body.userid !== "undefined") && !(isNaN(req.body.userid));
+		const all_info_exist = name_exist && email_exist && role_exist && userid_exist;
+
+        if (all_info_exist)
+        {
+            let nameSearch = '%';
+            let emailSearch = '%';
+            let roleSearch = '%';
+            let useridLowerSearch = '0'; 
+            let useridUpperSearch = '9999';
+
+            if ((req.body.name).length !== 0)
+            {
+                nameSearch = '%' + req.body.name + '%';
+            }            
+
+            if ((req.body.email).length !== 0)
+            {
+                emailSearch = '%' + req.body.email + '%';
+            }  
+
+            if ((req.body.role).length !== 0)
+            {
+                roleSearch = '%' + req.body.role + '%';
+            }  
+
+            if ((req.body.userid).length !== 0)
+            {
+                useridLowerSearch = req.body.userid;
+                useridUpperSearch = req.body.userid;
+            }
+
+            const data = {
+                name: nameSearch,
+                email: emailSearch,
+                role: roleSearch,
+				useridLower: useridLowerSearch,
+                useridUpper: useridUpperSearch
+            }            
+
+			const callback = (error, results, fields) => {
+				if (error) 
+				{
+					console.error("Error filterUsersBySearchKey:", error);
+					res.status(500).json(error);
+				} 
+				else 
+				{
+					if(results.length == 0)
+                    {
+                        res.status(404).json({ message: "User not found"});
+                    }
+					else
+                    {
+                        res.status(200).json(results);
+                    }
+				}
+			}
+
+            model.filterUsers(data, callback);
+        }
+        else
+        {
+            res.status(500).json({ message: "Required http request body key and values are not provided as required by this web service."});
+        }
     }
 }
 
