@@ -15,6 +15,16 @@ export default function Page_delete_centre(props) {
                     <div className="col-sm-12 col-lg-8 mt-3 px-2">
                         <div className="h-100 container mt-2 px-3 py-2 bg-body-secondary border border-2 rounded-4">
                             <h6 className="text-center text-primary-emphasis">Delete selected products</h6>
+                            <form 
+                                className="adminForm"
+                                id="templateForm"
+                                onSubmit={(e) => {
+                                    e.preventDefault();
+                                    console.log("Template form: Form submitted successfully");
+
+
+                                }}
+                            ></form>
                         </div>
                     </div>
                     <div className="col-sm-12 col-lg-4 mt-3 px-2">
@@ -23,9 +33,10 @@ export default function Page_delete_centre(props) {
                             <div className="row my-3 d-grid px-2">
                                <button 
                                     type="submit" 
+                                    form="templateForm"
                                     className="btn btn-primary"
                                     onClick={() => {
-                                        console.log("Page_delete_centre: add button clicked");
+                                        console.log("Template form: add button clicked");
 
 
                                     }}

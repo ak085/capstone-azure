@@ -1,0 +1,161 @@
+Capstone endpoints documentation
+
+A. Product menu
+
+A1. Add product
+Localhost endpoint: http://localhost:3000/product
+AWS endpoint: 
+HTTP method: POST
+Request body JSON:
+{
+	name: "name entry",
+	description: "description entry",
+	brand: "brand entry",
+	imageurl: "url entry",
+	catid: "1"	
+}
+Request config:
+headers: {
+	"Content-Type": "application/json",
+	"Authorization": `Bearer ${retrivedJWT}`
+}
+
+A2. Update product
+Localhost endpoint: http://localhost:3000/product/:id
+AWS endpoint: 
+HTTP method: PUT
+Request body JSON:
+{
+	name: "name entry",
+	description: "description entry",
+	brand: "brand entry",
+	imageurl: "url entry",
+	catid: "1"	
+}
+Request config:
+headers: {
+	"Content-Type": "application/json",
+	"Authorization": `Bearer ${retrivedJWT}`
+}
+
+A3. Delete product
+Localhost endpoint: http://localhost:3000/product/:id
+AWS endpoint: 
+HTTP method: DELETE
+Request body JSON: None, not needed
+Request config:
+headers: {
+	"Authorization": `Bearer ${retrivedJWT}`
+}
+
+A4. Filter product
+Localhost endpoint: http://localhost:3000/product/filter/all
+AWS endpoint: 
+HTTP method: POST
+Request body JSON:
+{
+	name: "name search key",
+	description: "description search key",
+	brand: "brand search key",
+	catid: "cat id number search key"	
+}
+
+Comment: 
+- JWT is NOT required for this web service.
+- all 4 JSON keys above, must be provided, JSON value for key can be empty string.
+- If empty string for search key means wildcard, select all for that search key criteria.
+- if item cannot be found on backend based on search keys, HTTP 404 would be returned. 
+
+B. Category menu
+
+B1. Add category
+Localhost endpoint: http://localhost:3000/category
+AWS endpoint: 
+HTTP method: POST
+Request body JSON:
+{
+	name: "name entry",
+	description: "description entry"
+}
+Request config:
+headers: {
+	"Content-Type": "application/json",
+	"Authorization": `Bearer ${retrivedJWT}`
+}
+
+B2. Update category
+Localhost endpoint: http://localhost:3000/category/:id
+AWS endpoint: 
+HTTP method: PUT
+Request body JSON:
+{
+	name: "name entry",
+	description: "description entry"
+}
+Request config:
+headers: {
+	"Content-Type": "application/json",
+	"Authorization": `Bearer ${retrivedJWT}`
+}
+
+B3. Filter category
+Localhost endpoint: http://localhost:3000/category/filter
+AWS endpoint: 
+HTTP method: POST
+Request body JSON:
+{
+    "catname": "catname search key",
+    "catdescription": "catdescription search key",
+    "catid": "cat id number search key"
+}
+Request config:
+headers: {
+	"Content-Type": "application/json",
+	"Authorization": `Bearer ${retrivedJWT}`
+}
+
+Comment: 
+- JWT is required for this web service.
+- all 3 JSON keys above, must be provided, JSON value for key can be empty string.
+- If empty string for search key means wildcard, select all for that search key criteria.
+- if item cannot be found on backend based on search keys, HTTP 404 would be returned. 
+
+C. User menu
+
+C1. Register user
+Localhost endpoint: http://localhost:3000/user/register
+AWS endpoint: 
+HTTP method: POST
+Request body JSON:
+{
+    "name": "register name entry",
+    "email": "register email entry",
+    "password": "register password entry"
+}
+Comment: 
+- email must be unique and different from any email column entry in database
+
+C2. Filter user
+Localhost endpoint: http://localhost:3000/user/filter
+AWS endpoint:
+HTTP method: POST
+Request body JSON:
+{
+    "name": "name search key",
+    "email": "email search key",
+    "role": "role search key: Admin or Member",
+    "userid": "user id number search key"
+}
+Request config:
+headers: {
+	"Content-Type": "application/json",
+	"Authorization": `Bearer ${retrivedJWT}`
+}
+
+Comment: 
+- JWT is required for this web service.
+- all 4 JSON keys above, must be provided, JSON value for key can be empty string.
+- If empty string for search key means wildcard, select all for that search key criteria.
+- For JSON key role: 3 possible entries, "" or "Admin" or "Member" is encouraged to be used.
+- if item cannot be found on backend based on search keys, HTTP 404 would be returned. 
+

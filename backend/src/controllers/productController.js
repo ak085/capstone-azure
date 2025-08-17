@@ -350,7 +350,79 @@ var productController =
                 res.status(500).json({ message: "Too few json keys provided, this web service requires keys of name, description, brand, imageurl, catid."});
             }
         }
-    }    
+    },
+
+    filterProductsBySearchKey: (req, res, next) =>
+    {
+        const name_exist = (typeof req.body.name !== "undefined");
+		const description_exist = (typeof req.body.description !== "undefined");
+		const brand_exist = (typeof req.body.brand !== "undefined");
+		const catid_exist = (typeof req.body.catid !== "undefined") && !(isNaN(req.body.catid));
+		const all_info_exist = name_exist && description_exist && brand_exist && catid_exist;
+		
+		if (all_info_exist)
+		{
+            let nameSearch = '%';
+            let descriptSearch = '%';
+            let brandSearch = '%';
+            let catidLowerSearch = '0'; 
+            let catidUpperSearch = '9999';
+
+            if ((req.body.name).length !== 0)
+            {
+                nameSearch = '%' + req.body.name + '%'; 
+            }
+
+            if ((req.body.description).length !== 0)
+            {
+                descriptSearch = '%' + req.body.description + '%'; 
+            }
+
+            if ((req.body.brand).length !== 0)
+            {
+                brandSearch = '%' + req.body.brand + '%';
+            }
+
+            if ((req.body.catid).length !== 0)
+            {
+                catidLowerSearch = req.body.catid;
+                catidUpperSearch = req.body.catid;
+            }
+			
+            const data = {
+                name: nameSearch,
+                description: descriptSearch,
+                brand: brandSearch,
+                catidLower: catidLowerSearch,
+				catidUpper: catidUpperSearch
+            }
+
+			const callback = (error, results, fields) => {
+				if (error) 
+				{
+					console.error("Error filterProductsBySearchKey:", error);
+					res.status(500).json(error);
+				} 
+				else 
+				{
+					if(results.length == 0)
+                    {
+                        res.status(404).json({ message: "Product not found"});
+                    }
+					else
+                    {
+                        res.status(200).json(results);
+                    }
+				}
+			}
+
+			model.filterProductsByUser(data, callback);
+		}
+        else
+        {
+            res.status(500).json({ message: "Required http request body key and values are not provided as required by this web service."});
+        }
+    }
 }
 
 module.exports = productController;

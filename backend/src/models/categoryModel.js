@@ -38,8 +38,18 @@ var categoryModel = {
         const VALUES = [data.catname, data.catdescription, data.catid];
 
         pool.query(SQLSTATMENT, VALUES, callback);
-    }
+    },
 
+    filterCategoryByUser : (data, callback) => {
+        const SQLSTATMENT = `
+            SELECT * from category 
+            WHERE catname like ? and catdescription like ? and 
+            catid BETWEEN ? AND ?;
+            `;
+        const VALUES = [data.catname, data.catdescription, data.catidLower, data.catidUpper];
+
+        pool.query(SQLSTATMENT, VALUES, callback);
+    }
 }
 
 module.exports = categoryModel;

@@ -43,6 +43,17 @@ var userModel = {
     getAllUsers: (callback) => {
         const SQLSTATMENT = `SELECT userid, email, name, role FROM user;`;
 		pool.query(SQLSTATMENT, callback);
+    },
+
+    filterUsers : (data, callback) => {
+        const SQLSTATMENT = `
+            SELECT userid, email, name, role from user 
+            WHERE name like ? and email like ? and role like ? and 
+            userid BETWEEN ? AND ?;
+            `;
+        const VALUES = [data.name, data.email, data.role, data.useridLower, data.useridUpper];
+
+        pool.query(SQLSTATMENT, VALUES, callback);
     }
 }
 

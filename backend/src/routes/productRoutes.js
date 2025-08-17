@@ -8,6 +8,7 @@ const jwtMiddleware = require("../middlewares/jwtMiddleware");
 router.get('/', controller.readAllProducts);
 router.get('/:searchkey', controller.getProductsBySearchKey);
 router.get('/find/column', controller.getProductBySearchColumn);
+router.post('/filter/all', controller.filterProductsBySearchKey);
 
 // Admin web API, these services require bearer token to authenticate before response
 router.post('/', jwtMiddleware.verifyToken, jwtMiddleware.verifyAdmin, controller.addNewProduct);
