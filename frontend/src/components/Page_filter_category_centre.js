@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
-import Category_single_card from './Category_single_card.js';
 import Capstone_config from '../config/Capstone_config.js';
+import Category_single_card from './Category_single_card.js';
 const config = Capstone_config();
 const categoryFilterEP = config.categoryFilterEP;
 const categoryEP = config.categoryEP;
@@ -17,6 +17,7 @@ export default function Page_filter_category_centre(props) {
 
     const [categoryDetails, setCategoryDetails] = useState([]);
     const [catIdOptArr, setCatIdOptArr] = useState([]);
+    
 
     useEffect(() => {
         console.log("Page_filter_category_centre: use effect: execution: categoryEP: ", categoryEP);
@@ -25,6 +26,36 @@ export default function Page_filter_category_centre(props) {
         // 1) HTTP get request for categoryEP and if success setCategoryDetails and setCatIdOptArr
         // if 1) is done successfully, Category Entries will update with retrieved data, Category ID select input updated with options
         
+        const retrivedJWT = localStorage.getItem('jwtToken');
+        const reqConfig = {
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Authorization": `Bearer ${retrivedJWT}`
+                            }
+                }
+       
+        axios.get(categoryEP, reqConfig)
+        .then(function (response)  {
+            console.log("Page_filter_category_centre: Categories HTTP GET request succcess");
+            setCategoryDetails(response.data);
+            console.log(response.data);
+
+            let optionArrTemp = [];
+            const firstOpt = (<option key="cat_option_0" value="">No Selection</option>);
+                optionArrTemp.push(firstOpt);
+                const genOptionArr = response.data.map((item, index) => (
+                        <option key={"cat_option_" + item.catid.toString()} value={item.catid.toString()}>
+                            { item.catid.toString() + " : " + item.catname }
+                        </option>
+                    ));
+                optionArrTemp.push(...genOptionArr);
+
+                setCatIdOptArr(optionArrTemp);
+        })
+        .catch(function (error) {
+            console.log("Page_filter_product_centre: use effect error:", error);
+        });
+
     }, []);    
 
     return (
@@ -48,6 +79,48 @@ export default function Page_filter_category_centre(props) {
                                     // and if success setCategoryDetails 
                                     // if 1) HTTP request success, Category Entries will updated with retrieved query data  
                                     // if 1) HTTP request 404, Category Entries will updated with blank array, alert user
+                                        // swc start
+
+                                    const retrivedJWT = localStorage.getItem('jwtToken');
+                                    const reqConfig = {
+                                                        headers: {
+                                                            "Content-Type": "application/json",
+                                                            "Authorization": `Bearer ${retrivedJWT}`
+                                                        }
+                                            }
+                                        const reqBody = {
+                                            catname : formInput.catname,
+                                            catdescription : formInput.catdescription,
+                                            catid : formInput.catid	
+                                        }
+
+                                        console.log(reqBody);
+
+                                        axios.post(categoryFilterEP, reqBody, reqConfig)
+                                        .then(function (response)  {
+                                            console.log("Page_filter_category_centre: Categories HTTP GET request succcess");
+                                            setCategoryDetails(response.data);
+                                            console.log(response.data);
+
+                                            // let optionArrTemp = [];
+                                            // const firstOpt = (<option key="cat_option_0" value="">No Selection</option>);
+                                            //     optionArrTemp.push(firstOpt);
+                                            //     const genOptionArr = response.data.map((item, index) => (
+                                            //             <option key={"cat_option_" + item.catid.toString()} value={item.catid.toString()}>
+                                            //                 { item.catid.toString() + " : " + item.catname }
+                                            //             </option>
+                                            //         ));
+                                            //     optionArrTemp.push(...genOptionArr);
+
+                                            //     setCatIdOptArr(optionArrTemp);
+                                        })
+                                        .catch(function (error) {
+                                            setCategoryDetails([]);
+                                            alert("No category found based on filter query");
+                                            console.log("Page_filter_category_centre: post filter error:", error);
+                                        });
+                                        // swc end
+
 
                                 }}
                             >
@@ -123,8 +196,27 @@ export default function Page_filter_category_centre(props) {
                                         // axios get, .then, .catch, .finally
                                         // .catch: handle error
                                         // .finally: setFormInput({catname: "", catdescription: "", catid: ""});
-
-                                    }}
+                                
+                                const retrivedJWT = localStorage.getItem('jwtToken');
+                                const reqConfig = {
+                                                    headers: {
+                                                        "Content-Type": "application/json",
+                                                        "Authorization": `Bearer ${retrivedJWT}`
+                                                    }
+                                        }
+                            
+                                axios.get(categoryEP, reqConfig)
+                                .then(function (response)  {
+                                    console.log("Page_filter_category_centre: Categories HTTP GET request succcess");
+                                    setCategoryDetails(response.data);
+                                    console.log(response.data);
+                                })
+                                .catch(function (error) {
+                                    console.log("Page_filter_product_centre: use effect error:", error);
+                                })
+                                .finally(function () {setFormInput({catname: "", catdescription: "", catid: ""})});
+                                }
+                            }
                                 >Reset filter</button>                                
                             </div>
                         </div>
