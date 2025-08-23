@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
-import Category_single_card_update from './Category_single_card_update.js';
 import Capstone_config from '../config/Capstone_config.js';
+import Category_single_card_update from './Category_single_card_update.js';
 const config = Capstone_config();
 const categoryEP = config.categoryEP;
 
@@ -79,7 +79,61 @@ export default function Page_update_cat_centre(props) {
                                         // To do: add code for Update category HTTP put, followed by category HTTP get
                                         // after successful category HTTP get, setCategoryDetails(response.data)
                                         // if done correct, the Category Entries display at page bottom will populate
+                                        const updateCategoryEP = `${categoryEP}/${formInput.catid}`;
+                                        const reqBody = {
+                                            name: formInput.catname,
+                                            description: formInput.catdescription,
+                                        }
+                                        const reqConfig = {
+                                            headers: {
+                                                "Content-Type": "application/json",
+                                                "Authorization": `Bearer ${retrivedJWT}`
+                                            }
+                                        }
+                                        const logMsg = `Page_update_centre: updating category Id: ${formInput.catid} on EP: ${updateCategoryEP}`;
+                                        console.log(logMsg);
+                                        axios.put(updateCategoryEP, reqBody, reqConfig)
+                                        .then(function (response) { 
+                                            console.log("Page_update_centre: Update category HTTP Put request succcess for category Id:", formInput.catid);
+                                            console.log(response.data);
+                                        })
+                                        .then(function () { 
+                                            // HTTP GET request for all category after product update HTTP PUT request success
+                                            axios.get(categoryEP, { headers: { Authorization: `Bearer ${retrivedJWT}`} })
+                                            .then(function (response) {
+                                                console.log("Page_update_centre: Cagetories HTTP GET request succcess");
+                                                console.log(response.data);
+                                                setCategoryDetails(response.data);
+                                                
+                                            let optionArrTemp = [];
+                                            const firstOpt = (<option key="cat_option_0" value="">Select a category</option>);
+                                            optionArrTemp.push(firstOpt);
+                                            const genOptionArr = response.data.map((item, index) => (
+                                                <option key={"cat_option_" + item.catid.toString()} value={item.catid.toString()}>
+                                                    { item.catid.toString() + " : " + item.catname }
+                                                </option>
+                                            ));
+                                            optionArrTemp.push(...genOptionArr);
 
+                                            setCatIdOptArr(optionArrTemp);
+                                            });
+                                        })
+                                        .catch(function (error) {
+                                            let errorUserMsg = `Attempted action is unsuccessful. Following error has occured: ${error.message}`;
+                                            console.log("Page_update_centre: Update product submit error:", error);
+                                            alert(errorUserMsg);
+                                        })
+                                        .finally(function () { 
+                                            setFormInput({
+                                                name: "",
+                                                description: "",
+                                                brand: "",
+                                                imageurl: "",
+                                                catid: "",
+                                                productId: ""		
+                                            });
+                                            setFocusProductId("-1");
+                                        });
                                     }
                                     else
                                     {
