@@ -12,6 +12,8 @@ export default function Capstone_config() {
         userAllEP: `${backendBaseURL}/user/all`,
         userRegisterEP: `${backendBaseURL}/user/register`,
         userFilterEP: `${backendBaseURL}/user/filter`,
+        userUpdateEP: `${backendBaseURL}/user/update`,
+        userDeleteEP: `${backendBaseURL}/user/delete`,
         defaultLoginEmail: "austin@ymail.com",
         defaultLoginPw: "iamaustin123"
     };

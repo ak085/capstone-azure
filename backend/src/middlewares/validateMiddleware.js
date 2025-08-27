@@ -9,9 +9,12 @@ var validateMiddleware =
 		var password = req.body.password;
 		
 		//use validator library to do checks
-		validatePass = validator.isAlphanumeric(name) && validator.isEmail(email) && validator.isAlphanumeric(password) && password.length > 7;
+		// Allow spaces in names, validate email, check password exists
+		validatePass = name && name.trim().length > 0 && 
+					  validator.isEmail(email) && 
+					  password && password.trim().length > 0;
 		
-		if(validatePass)
+		if (validatePass)
 		{
 			next();
 		}

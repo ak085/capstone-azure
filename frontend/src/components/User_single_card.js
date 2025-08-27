@@ -19,6 +19,28 @@ export default function User_single_card(props) {
                     </li>                  
                 </ul>
 
+                <div className="card-body">
+                    <div className="d-grid gap-2">
+                        <button 
+                            className="btn btn-warning btn-sm"
+                            onClick={() => {
+                                console.log('Edit button clicked for user:', props.item);
+                                props.onEdit(props.item);
+                            }}
+                        >
+                            Edit
+                        </button>
+                        <button 
+                            className="btn btn-danger btn-sm"
+                            onClick={() => {
+                                console.log('Delete button clicked for user:', props.item);
+                                props.onDelete(props.item.userid, props.item.name);
+                            }}
+                        >
+                            Delete
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
     );

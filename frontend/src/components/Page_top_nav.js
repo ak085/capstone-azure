@@ -94,7 +94,7 @@ export default function Page_top_nav() {
                                             Register User
                                         </Link>
                                         <Link to={'/filteruser'} className="dropdown-item">
-                                            Filter User
+                                            User Management
                                         </Link>
                                     </li>
                                 </ul>

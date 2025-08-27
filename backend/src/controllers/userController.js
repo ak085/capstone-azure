@@ -88,19 +88,21 @@ var userController = {
         const name_exist = (typeof req.body.name !== "undefined");
         const email_exist = (typeof req.body.email !== "undefined");
         const pw_exist = (typeof req.body.password !== "undefined");
-        const body_info_exist = name_exist && email_exist && pw_exist;
+        const role_exist = (typeof req.body.role !== "undefined");
+        const body_info_exist = name_exist && email_exist && pw_exist && role_exist;
         
         if(body_info_exist)
         {
-            const default_user_role = "Admin"; // "Member"
+            // Use the role provided by the frontend, default to "Member" if not provided
+            const user_role = req.body.role || "Member";
             const data = {
                 name: req.body.name,
                 email: req.body.email,
-                role: default_user_role,
+                role: user_role,
                 password: res.locals.hash
             };
             
-            res.locals.role = default_user_role;
+            res.locals.role = user_role;
             res.locals.message = 'User ' + data.name;
 
             const callback = (error, results, fields) => {
@@ -124,7 +126,7 @@ var userController = {
         }
         else
         {
-            res.status(500).json({ message: "Name or email or password are not provided."});	
+            res.status(500).json({ message: "Name, email, password, and role are required."});	
         }
     },    
 
@@ -284,6 +286,92 @@ var userController = {
         else
         {
             res.status(500).json({ message: "Required http request body key and values are not provided as required by this web service."});
+        }
+    },
+
+    updateUser: (req, res, next) => {
+        const userid_exist = (typeof req.body.userid !== "undefined") && !(isNaN(req.body.userid));
+        const name_exist = (typeof req.body.name !== "undefined");
+        const email_exist = (typeof req.body.email !== "undefined");
+        const role_exist = (typeof req.body.role !== "undefined");
+        const password_provided = (typeof req.body.password !== "undefined");
+        const all_info_exist = userid_exist && name_exist && email_exist && role_exist;
+
+        if (all_info_exist) {
+            const data = {
+                userid: req.body.userid,
+                name: req.body.name,
+                email: req.body.email,
+                role: req.body.role
+            };
+
+            // If password is provided, add it to data (it's already hashed by middleware)
+            if (password_provided && req.body.password && req.body.password.trim().length > 0) {
+                data.password = req.body.password;
+                console.log('Password update: Password provided and added to data');
+            } else {
+                console.log('Password update: No password provided or empty');
+            }
+            
+            console.log('Update data being sent to model:', JSON.stringify(data, null, 2));
+
+            const callback = (error, results, fields) => {
+                if (error) {
+                    console.error("Error updateUser:", error);
+                    res.status(500).json(error);
+                } else {
+                    if (results.affectedRows === 0) {
+                        res.status(404).json({
+                            message: "User not found for specified userid"
+                        });
+                    } else {
+                        res.status(200).json({
+                            message: "User updated successfully",
+                            userid: data.userid
+                        });
+                    }
+                }
+            };
+
+            model.updateUser(data, callback);
+        } else {
+            res.status(500).json({ 
+                message: "Userid, name, email, and role are required for updating user." 
+            });
+        }
+    },
+
+    deleteUser: (req, res, next) => {
+        const userid_exist = (typeof req.body.userid !== "undefined") && !(isNaN(req.body.userid));
+
+        if (userid_exist) {
+            const data = {
+                userid: req.body.userid
+            };
+
+            const callback = (error, results, fields) => {
+                if (error) {
+                    console.error("Error deleteUser:", error);
+                    res.status(500).json(error);
+                } else {
+                    if (results.affectedRows === 0) {
+                        res.status(404).json({
+                            message: "User not found for specified userid"
+                        });
+                    } else {
+                        res.status(200).json({
+                            message: "User deleted successfully",
+                            userid: data.userid
+                        });
+                    }
+                }
+            };
+
+            model.deleteUser(data, callback);
+        } else {
+            res.status(500).json({ 
+                message: "Userid is required for deleting user." 
+            });
         }
     }
 }

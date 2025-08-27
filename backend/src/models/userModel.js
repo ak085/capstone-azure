@@ -54,6 +54,38 @@ var userModel = {
         const VALUES = [data.name, data.email, data.role, data.useridLower, data.useridUpper];
 
         pool.query(SQLSTATMENT, VALUES, callback);
+    },
+
+    updateUser: (data, callback) => {
+        let SQLSTATMENT;
+        let VALUES;
+        
+        if (data.password) {
+            // Update including password
+            SQLSTATMENT = `
+                UPDATE user 
+                SET name = ?, email = ?, role = ?, password = ?
+                WHERE userid = ?;
+                `;
+            VALUES = [data.name, data.email, data.role, data.password, data.userid];
+        } else {
+            // Update without password
+            SQLSTATMENT = `
+                UPDATE user 
+                SET name = ?, email = ?, role = ?
+                WHERE userid = ?;
+                `;
+            VALUES = [data.name, data.email, data.role, data.userid];
+        }
+        
+        pool.query(SQLSTATMENT, VALUES, callback);
+    },
+
+    deleteUser: (data, callback) => {
+        const SQLSTATMENT = `DELETE FROM user WHERE userid = ?;`;
+        const VALUES = [data.userid];
+        
+        pool.query(SQLSTATMENT, VALUES, callback);
     }
 }
 
