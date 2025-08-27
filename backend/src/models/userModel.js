@@ -18,36 +18,36 @@ var userModel = {
 
     insertNewUser: (data, callback) => {
         const SQLSTATMENT = `
-            INSERT INTO user(name, email, role, password)
-            VALUES (?,?,?,?);
+            INSERT INTO user(name, email, role, password, suspension_status, suspension_reason)
+            VALUES (?,?,?,?,?,?);
             `;
-        const VALUES = [data.name, data.email, data.role, data.password];
+        const VALUES = [data.name, data.email, data.role, data.password, data.suspension_status || 'Active', data.suspension_reason || null];
     
         pool.query(SQLSTATMENT, VALUES, callback);
     },    
 
     getUserById: (data, callback) => {
-        const SQLSTATMENT = `SELECT email, name, role FROM user WHERE userid=?;`;
+        const SQLSTATMENT = `SELECT email, name, role, suspension_status, suspension_reason FROM user WHERE userid=?;`;
         const VALUES = [data.userid];
 
         pool.query(SQLSTATMENT, VALUES, callback);
     },
 
     getUserByEmail: (data, callback) => {
-        const SQLSTATMENT = `SELECT userid, name, role FROM user WHERE email=?;`;
+        const SQLSTATMENT = `SELECT userid, name, role, suspension_status, suspension_reason FROM user WHERE email=?;`;
         const VALUES = [data.email];
 
         pool.query(SQLSTATMENT, VALUES, callback);
     },
 
     getAllUsers: (callback) => {
-        const SQLSTATMENT = `SELECT userid, email, name, role FROM user;`;
+        const SQLSTATMENT = `SELECT userid, email, name, role, suspension_status, suspension_reason FROM user;`;
 		pool.query(SQLSTATMENT, callback);
     },
 
     filterUsers : (data, callback) => {
         const SQLSTATMENT = `
-            SELECT userid, email, name, role from user 
+            SELECT userid, email, name, role, suspension_status, suspension_reason from user 
             WHERE name like ? and email like ? and role like ? and 
             userid BETWEEN ? AND ?;
             `;
@@ -61,21 +61,21 @@ var userModel = {
         let VALUES;
         
         if (data.password) {
-            // Update including password
+            // Update including password and suspension
             SQLSTATMENT = `
                 UPDATE user 
-                SET name = ?, email = ?, role = ?, password = ?
+                SET name = ?, email = ?, role = ?, password = ?, suspension_status = ?, suspension_reason = ?
                 WHERE userid = ?;
                 `;
-            VALUES = [data.name, data.email, data.role, data.password, data.userid];
+            VALUES = [data.name, data.email, data.role, data.password, data.suspension_status || 'Active', data.suspension_reason || null, data.userid];
         } else {
-            // Update without password
+            // Update without password but with suspension
             SQLSTATMENT = `
                 UPDATE user 
-                SET name = ?, email = ?, role = ?
+                SET name = ?, email = ?, role = ?, suspension_status = ?, suspension_reason = ?
                 WHERE userid = ?;
                 `;
-            VALUES = [data.name, data.email, data.role, data.userid];
+            VALUES = [data.name, data.email, data.role, data.suspension_status || 'Active', data.suspension_reason || null, data.userid];
         }
         
         pool.query(SQLSTATMENT, VALUES, callback);

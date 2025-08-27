@@ -5,6 +5,11 @@ USE `capstone`;
 -- Host: localhost    Database: capstone
 -- ------------------------------------------------------
 -- Server version	8.0.42
+-- 
+-- UPDATED: Added suspension fields to user table
+-- - suspension_status: ENUM('Active', 'Suspended') DEFAULT 'Active'
+-- - suspension_reason: VARCHAR(100) DEFAULT NULL
+-- All existing users are set to 'Active' status
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -87,6 +92,8 @@ CREATE TABLE `user` (
   `name` varchar(50) NOT NULL,
   `role` varchar(50) NOT NULL,
   `password` varchar(256) NOT NULL,
+  `suspension_status` ENUM('Active', 'Suspended') DEFAULT 'Active',
+  `suspension_reason` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`userid`)
 ) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -97,7 +104,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (7,'angelina@ymail.com','angelina','Admin','$2b$10$2ag0CemIJG1MvcVpIBApZObZj73.loUlAI53R3OOSzvor2J.RmoiG'),(8,'austin@ymail.com','austin','Admin','$2b$10$UQ.eS/NmP1/aEuCfWJnqt.xRe2UvDksZ3jYRoK5rzKjjSmMcMTz0y'),(9,'brandon@ymail.com','brandon','Member','$2b$10$yRymLWPPArM5b7bVYDslv.6FNGCkfr6Jbx0/nxwbF4dQ0S1ul.3WC'),(10,'belinda@ymail.com','belinda','Member','$2b$10$5r5vBhKFTiJ7EG9RAVnrkOL2KIuDzhaWVoCDJn2nfUpNIg6EDG.GW'),(11,'charmaine@ymail.com','charmaine','Admin','$2b$10$w6cnYPKe8huUudB4AKG5d.xxYud5s6t2fawQZF14C0H9KlzpKl5aa'),(12,'collin@ymail.com','collin','Admin','$2b$10$C4i.vrW7ETmxjbfaevaebu/UMgfVlg2aBVowPhOqSF4bzCfpPT5Mm');
+INSERT INTO `user` VALUES (7,'angelina@ymail.com','angelina','Admin','$2b$10$2ag0CemIJG1MvcVpIBApZObZj73.loUlAI53R3OOSzvor2J.RmoiG','Active',NULL),(8,'austin@ymail.com','austin','Admin','$2b$10$UQ.eS/NmP1/aEuCfWJnqt.xRe2UvDksZ3jYRoK5rzKjjSmMcMTz0y','Active',NULL),(9,'brandon@ymail.com','brandon','Member','$2b$10$yRymLWPPArM5b7bVYDslv.6FNGCkfr6Jbx0/nxwbF4dQ0S1ul.3WC','Active',NULL),(10,'belinda@ymail.com','belinda','Member','$2b$10$5r5vBhKFTiJ7EG9RAVnrkOL2KIuDzhaWVoCDJn2nfUpNIg6EDG.GW','Active',NULL),(11,'charmaine@ymail.com','charmaine','Admin','$2b$10$w6cnYPKe8huUudB4AKG5d.xxYud5s6t2fawQZF14C0H9KlzpKl5aa','Active',NULL),(12,'collin@ymail.com','collin','Admin','$2b$10$C4i.vrW7ETmxjbfaevaebu/UMgfVlg2aBVowPhOqSF4bzCfpPT5Mm','Active',NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 

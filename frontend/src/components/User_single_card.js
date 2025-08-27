@@ -16,7 +16,21 @@ export default function User_single_card(props) {
                     </li>  
                     <li className="list-group-item">
                         <b>User ID:</b> {props.item.userid.toString()}
-                    </li>                  
+                    </li>
+                    <li className="list-group-item">
+                        <b>Status:</b> 
+                        <span className={`badge ${props.item.suspension_status === 'Active' ? 'bg-success' : 'bg-danger'} ms-2`}>
+                            {props.item.suspension_status || 'Active'}
+                        </span>
+                    </li>
+                    {props.item.suspension_status === 'Suspended' && props.item.suspension_reason && (
+                        <li className="list-group-item">
+                            <b>Reason:</b> 
+                            <span className="text-danger ms-2">
+                                {props.item.suspension_reason}
+                            </span>
+                        </li>
+                    )}                  
                 </ul>
 
                 <div className="card-body">

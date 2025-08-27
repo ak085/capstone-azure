@@ -31,6 +31,14 @@ var userController = {
                     }
                     else 
                     {  
+                        // Check if user is suspended
+                        if (results[0].suspension_status === 'Suspended') {
+                            res.status(403).json({
+                                message: "Account is suspended. Reason: " + (results[0].suspension_reason || 'No reason provided')
+                            });
+                            return;
+                        }
+                        
                         //match email
                         res.locals.userid = results[0].userid; // saves userid from database in res.locals for use in jwt payload
                         res.locals.email = results[0].email;
@@ -99,7 +107,9 @@ var userController = {
                 name: req.body.name,
                 email: req.body.email,
                 role: user_role,
-                password: res.locals.hash
+                password: res.locals.hash,
+                suspension_status: 'Active',
+                suspension_reason: null
             };
             
             res.locals.role = user_role;
@@ -295,6 +305,8 @@ var userController = {
         const email_exist = (typeof req.body.email !== "undefined");
         const role_exist = (typeof req.body.role !== "undefined");
         const password_provided = (typeof req.body.password !== "undefined");
+        const suspension_status_provided = (typeof req.body.suspension_status !== "undefined");
+        const suspension_reason_provided = (typeof req.body.suspension_reason !== "undefined");
         const all_info_exist = userid_exist && name_exist && email_exist && role_exist;
 
         if (all_info_exist) {
@@ -302,7 +314,9 @@ var userController = {
                 userid: req.body.userid,
                 name: req.body.name,
                 email: req.body.email,
-                role: req.body.role
+                role: req.body.role,
+                suspension_status: req.body.suspension_status || 'Active',
+                suspension_reason: req.body.suspension_reason || null
             };
 
             // If password is provided, add it to data (it's already hashed by middleware)

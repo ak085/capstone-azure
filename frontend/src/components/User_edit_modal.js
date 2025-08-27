@@ -10,7 +10,9 @@ export default function User_edit_modal({ user, isOpen, onClose, onUpdate }) {
         userid: '',
         name: '',
         email: '',
-        role: ''
+        role: '',
+        suspension_status: 'Active',
+        suspension_reason: ''
     });
     const [passwordData, setPasswordData] = useState({
         changePassword: false,
@@ -26,7 +28,9 @@ export default function User_edit_modal({ user, isOpen, onClose, onUpdate }) {
                 userid: user.userid,
                 name: user.name,
                 email: user.email,
-                role: user.role
+                role: user.role,
+                suspension_status: user.suspension_status || 'Active',
+                suspension_reason: user.suspension_reason || ''
             });
             // Reset password fields when user changes
             setPasswordData({
@@ -175,6 +179,41 @@ export default function User_edit_modal({ user, isOpen, onClose, onUpdate }) {
                                     <option value="Member">Member</option>
                                 </select>
                             </div>
+
+                            {/* Suspension Status Section */}
+                            <div className="mb-3">
+                                <label className="form-label">Account Status</label>
+                                <select 
+                                    className="form-select"
+                                    value={formData.suspension_status}
+                                    onChange={(e) => setFormData(prev => ({ 
+                                        ...prev, 
+                                        suspension_status: e.target.value,
+                                        suspension_reason: e.target.value === 'Active' ? '' : formData.suspension_reason
+                                    }))}
+                                    required
+                                >
+                                    <option value="Active">Active</option>
+                                    <option value="Suspended">Suspended</option>
+                                </select>
+                            </div>
+
+                            {formData.suspension_status === 'Suspended' && (
+                                <div className="mb-3">
+                                    <label className="form-label">Suspension Reason</label>
+                                    <select 
+                                        className="form-select"
+                                        value={formData.suspension_reason}
+                                        onChange={(e) => setFormData(prev => ({ ...prev, suspension_reason: e.target.value }))}
+                                        required
+                                    >
+                                        <option value="">Select a reason</option>
+                                        <option value="Violation">Violation</option>
+                                        <option value="Inactive">Inactive</option>
+                                        <option value="Requested">Requested</option>
+                                    </select>
+                                </div>
+                            )}
 
                             {/* Password Change Section */}
                             <div className="mb-3">
