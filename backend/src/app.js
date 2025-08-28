@@ -13,9 +13,15 @@ var cors= require('cors');
 //////////////////////////////////////////////////////
 const app = express();
 
-// CORS
-app.options('*', cors());
-app.use(cors());
+// CORS - Allow requests from frontend on port 8000
+const corsOptions = {
+    origin: ['http://localhost:8000', 'http://127.0.0.1:8000'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
+};
+app.options('*', cors(corsOptions));
+app.use(cors(corsOptions));
 //////////////////////////////////////////////////////
 // USES
 //////////////////////////////////////////////////////
