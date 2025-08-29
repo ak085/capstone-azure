@@ -1,0 +1,9 @@
+app_location: "/frontend" # App source code path
+api_location: "" # Api source code path - leave blank if not applicable
+output_location: "dist" # Built app content directory - e.g. build, dist, public, etc.
+app_build_command: "npm run build"
+api_build_command: ""
+deployment_environment: production
+app_settings: # App settings
+  - name: "BACKEND_URL"
+    value: "https://capstone-azure-bkg4ewd4fnfrdfgu.eastasia-01.azurewebsites.net"
