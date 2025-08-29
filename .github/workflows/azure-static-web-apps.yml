@@ -28,4 +28,3 @@ jobs:
           app_location: "/frontend"
           output_location: "dist"
           app_build_command: "npm run build"
-          skip_app_build: false
