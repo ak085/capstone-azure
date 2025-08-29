@@ -1,7 +1,7 @@
 
 export default function Capstone_config() {
     // change the base URL here and all places refering to endpoints from this file will use it
-    const backendBaseURL = "http://localhost:3000";
+    const backendBaseURL = "https://capstone-azure-bkg4ewd4fnfrdfgu.eastasia-01.azurewebsites.net";
 
     var config = {
         productEP: `${backendBaseURL}/product`,
