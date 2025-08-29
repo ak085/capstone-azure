@@ -30,7 +30,8 @@ var validateMiddleware =
 		var password = req.body.password;
 		
 		//use validator library to do checks
-		validatePass = validator.isEmail(email) && validator.isAlphanumeric(password);
+		// Allow common password characters, just check that password exists and has reasonable length
+		validatePass = validator.isEmail(email) && password && password.trim().length > 0;
 
 		if(validatePass)
 		{
