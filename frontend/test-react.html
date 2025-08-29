@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>React Test - Capstone App</title>
+        <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+        <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    <body>
+        <div class="container mt-4">
+            <h1>React App Test</h1>
+            <div id="root"></div>
+        </div>
+
+        <script>
+            // Simple React component to test if React is working
+            function TestComponent() {
+                const [count, setCount] = React.useState(0);
+                
+                return React.createElement('div', { className: 'card' },
+                    React.createElement('div', { className: 'card-body' },
+                        React.createElement('h5', { className: 'card-title' }, 'React Test Component'),
+                        React.createElement('p', { className: 'card-text' }, `Count: ${count}`),
+                        React.createElement('button', { 
+                            className: 'btn btn-primary',
+                            onClick: () => setCount(count + 1)
+                        }, 'Increment')
+                    )
+                );
+            }
+
+            // Test if React is working
+            try {
+                console.log('Testing React...');
+                const root = ReactDOM.createRoot(document.getElementById('root'));
+                root.render(React.createElement(TestComponent));
+                console.log('React app rendered successfully');
+            } catch (error) {
+                console.error('React app failed to render:', error);
+                document.getElementById('root').innerHTML = `
+                    <div class="alert alert-danger">
+                        <h4>React App Failed to Load</h4>
+                        <p>Error: ${error.message}</p>
+                        <pre>${error.stack}</pre>
+                    </div>
+                `;
+            }
+        </script>
+    </body>
+</html>
