@@ -21,7 +21,30 @@
         <script type="module" src="./dist/index.js"></script>
     </head>
     <body>
+
         <div id="root"></div>
+        
+        <script>
+            // Check if user is authenticated, if not redirect to login
+            window.addEventListener('load', function() {
+                const jwtToken = localStorage.getItem('jwtToken');
+                if (!jwtToken) {
+                    // No authentication, redirect to login page
+                    window.location.href = 'login.html';
+                } else {
+                    // Check if we're coming from login page (auth parameter)
+                    const urlParams = new URLSearchParams(window.location.search);
+                    if (urlParams.get('auth')) {
+                        // Force React app to re-check authentication by clearing the parameter
+                        window.history.replaceState({}, document.title, window.location.pathname);
+                        // Trigger a small delay to ensure React app has loaded
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 100);
+                    }
+                }
+            });
+        </script>
         <script
             src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
             integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"

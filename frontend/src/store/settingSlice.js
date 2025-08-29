@@ -1,9 +1,58 @@
 import { createSlice } from '@reduxjs/toolkit';
 
+// Check localStorage for existing JWT on store initialization
+const getInitialLoginState = () => {
+    try {
+        const jwtToken = localStorage.getItem('jwtToken');
+        const jwtTime = localStorage.getItem('jwtToken_time');
+        const jwtUser = localStorage.getItem('jwtToken_user');
+        
+        console.log('settingSlice: Initializing with JWT:', jwtToken ? 'Found' : 'Not found');
+        console.log('settingSlice: JWT time:', jwtTime);
+        console.log('settingSlice: JWT user:', jwtUser);
+        
+        if (jwtToken && jwtTime && jwtUser) {
+            // Check if JWT token is not expired (basic check)
+            const tokenTime = new Date(jwtTime);
+            const currentTime = new Date();
+            const timeDiff = currentTime.getTime() - tokenTime.getTime();
+            const hoursDiff = timeDiff / (1000 * 60 * 60);
+            
+            console.log('settingSlice: Token age (hours):', hoursDiff);
+            
+            // If token is less than 24 hours old, consider it valid
+            if (hoursDiff < 24) {
+                console.log('settingSlice: Setting initial login state to TRUE');
+                return {
+                    isLogin: true,
+                    email: jwtUser,
+                    password: "", // Don't store password in state
+                    loginTime: jwtTime
+                };
+            } else {
+                console.log('settingSlice: Token expired, clearing localStorage');
+                localStorage.removeItem('jwtToken');
+                localStorage.removeItem('jwtToken_time');
+                localStorage.removeItem('jwtToken_user');
+            }
+        }
+    } catch (error) {
+        console.log('Error reading localStorage:', error);
+    }
+    
+    console.log('settingSlice: Setting initial login state to FALSE');
+    return {
+        isLogin: false,
+        email: "",
+        password: "",
+        loginTime: " -"
+    };
+};
+
 const settingSlice = createSlice({ 
     name: 'Settings Slice',
     initialState: {
-        accountLogin: {isLogin: false, email: "", password: "", loginTime: " -"}
+        accountLogin: getInitialLoginState()
     },
     reducers: {
         updateLogin: function (state, action)

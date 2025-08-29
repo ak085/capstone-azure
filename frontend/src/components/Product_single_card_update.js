@@ -5,7 +5,15 @@ export default function Product_single_card_update(props) {
     return (
         <div className="col-sm-6 col-lg-3 my-2 d-flex justify-content-center">
             <div className="card">
-                <img src={"../images/image1.png"} className="card-img-top" alt="Picture of item"></img>
+                <img 
+                    src={props.item.imageurl} 
+                    className="card-img-top" 
+                    alt="Picture of item"
+                    onError={(e) => {
+                        e.target.src = "../images/image1.png";
+                        e.target.alt = "Image not available";
+                    }}
+                ></img>
                 <div className={cardClassName}>
                     <h6>{props.item.name}</h6>
                     <p className="card-text">{props.item.description}</p>

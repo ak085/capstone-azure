@@ -1,4 +1,3 @@
-
 export default function Category_single_card_update(props) {
     const cardClassName = props.enableFocus ? "card-body cardFocus" : "card-body";
 

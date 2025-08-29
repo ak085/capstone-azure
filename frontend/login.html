@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Login - Capstone App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="css/main.css" rel="stylesheet">
+    <style>
+        .login-container {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .login-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            width: 100%;
+            max-width: 400px;
+        }
+        .login-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .login-header h2 {
+            color: #333;
+            font-weight: 600;
+        }
+        .form-control {
+            border-radius: 10px;
+            border: 2px solid #e9ecef;
+            padding: 12px 15px;
+            transition: all 0.3s ease;
+        }
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        .btn-login {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        .alert {
+            border-radius: 10px;
+            border: none;
+        }
+        .back-link {
+            text-align: center;
+            margin-top: 1rem;
+        }
+        .back-link a {
+            color: #667eea;
+            text-decoration: none;
+        }
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h2><i class="bi bi-person-circle"></i> User Login</h2>
+                <p class="text-muted">Enter your credentials to access the system</p>
+            </div>
+            
+            <form id="loginForm">
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password" required>
+                </div>
+                
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-login">
+                        <i class="bi bi-box-arrow-in-right"></i> Login
+                    </button>
+                </div>
+            </form>
+            
+            <div id="alertContainer"></div>
+            
+            <div class="back-link">
+                <a href="index.html"><i class="bi bi-arrow-left"></i> Back to Main App</a>
+                <br>
+                <button id="logoutBtn" class="btn btn-outline-secondary btn-sm mt-2" style="display: none;">
+                    <i class="bi bi-box-arrow-left"></i> Logout Current Session
+                </button>
+                <br>
+                <button id="clearAllBtn" class="btn btn-outline-danger btn-sm mt-2">
+                    <i class="bi bi-trash"></i> Clear All Authentication
+                </button>
+                <br>
+                <button id="testBackendBtn" class="btn btn-outline-info btn-sm mt-2">
+                    <i class="bi bi-wifi"></i> Test Backend Connection
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const alertContainer = document.getElementById('alertContainer');
+            
+            // Clear previous alerts
+            alertContainer.innerHTML = '';
+            
+            try {
+                // Show loading state
+                const submitBtn = document.querySelector('.btn-login');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> Logging in...';
+                submitBtn.disabled = true;
+                
+                console.log('Attempting login with:', { email, password: '***' });
+                
+                // Make API call to your existing backend
+                const response = await fetch('http://localhost:3000/user/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password
+                    })
+                });
+                
+                console.log('Response status:', response.status);
+                console.log('Response headers:', response.headers);
+                
+                const data = await response.json();
+                console.log('Response data:', data);
+                
+                if (response.ok) {
+                    // Login successful
+                    const jwtToken = data.token;
+                    const loginTime = new Date().toLocaleString();
+                    
+                    // Store in localStorage (same as your existing app)
+                    localStorage.setItem('jwtToken', jwtToken);
+                    localStorage.setItem('jwtToken_time', loginTime);
+                    localStorage.setItem('jwtToken_user', email);
+                    
+                    // Show success message
+                    showAlert('Login successful! Redirecting to main app...', 'success');
+                    
+                    // Try to update the React app's Redux store if it's running
+                    try {
+                        // Check if React app is running
+                        const reactApp = document.querySelector('#root');
+                        if (reactApp && reactApp.children.length > 0) {
+                            // Dispatch a custom event to notify React app
+                            window.dispatchEvent(new CustomEvent('userLoginSuccess', {
+                                detail: { email: email, loginTime: loginTime }
+                            }));
+                        }
+                    } catch (e) {
+                        console.log('Could not notify React app:', e);
+                    }
+                    
+                    // Redirect to main app after 2 seconds with a timestamp to force fresh state
+                    setTimeout(() => {
+                        const timestamp = new Date().getTime();
+                        window.location.href = `index.html?auth=${timestamp}`;
+                    }, 2000);
+                    
+                } else {
+                    // Login failed
+                    const errorMessage = data.message || 'Login failed. Please check your credentials.';
+                    showAlert(errorMessage, 'danger');
+                    
+                    // Clear password field
+                    document.getElementById('password').value = '';
+                }
+                
+            } catch (error) {
+                console.error('Login error:', error);
+                
+                // More specific error messages
+                if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+                    showAlert('Cannot connect to backend server. Please check if the backend is running on port 3000.', 'danger');
+                } else if (error.message.includes('NetworkError')) {
+                    showAlert('Network error. Please check your connection and try again.', 'danger');
+                } else {
+                    showAlert(`Login error: ${error.message}`, 'danger');
+                }
+            } finally {
+                // Reset button state
+                const submitBtn = document.querySelector('.btn-login');
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+        
+        function showAlert(message, type) {
+            const alertContainer = document.getElementById('alertContainer');
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            alertContainer.appendChild(alertDiv);
+            
+            // Auto-dismiss after 5 seconds
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.remove();
+                }
+            }, 5000);
+        }
+        
+        // Check if user is already logged in - but don't auto-redirect
+        window.addEventListener('load', function() {
+            const jwtToken = localStorage.getItem('jwtToken');
+            const logoutBtn = document.getElementById('logoutBtn');
+            
+            if (jwtToken) {
+                showAlert('You are already logged in. You can log out first if needed.', 'info');
+                logoutBtn.style.display = 'inline-block';
+                
+                // Also check if we should redirect to main app
+                const urlParams = new URLSearchParams(window.location.search);
+                if (urlParams.get('redirect') === 'main') {
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 2000);
+                }
+            } else {
+                logoutBtn.style.display = 'none';
+            }
+        });
+        
+        // Add logout functionality
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            localStorage.removeItem('jwtToken');
+            localStorage.removeItem('jwtToken_time');
+            localStorage.removeItem('jwtToken_user');
+            
+            showAlert('Logged out successfully! You can now login with different credentials.', 'success');
+            this.style.display = 'none';
+            
+            // Clear form fields
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+        });
+        
+        // Function to check if React app is already authenticated
+        function checkReactAppAuth() {
+            try {
+                // Check if React app is running and has login state
+                const reactApp = document.querySelector('#root');
+                if (reactApp && reactApp.children.length > 0) {
+                    // React app is running, check if it's already authenticated
+                    const jwtToken = localStorage.getItem('jwtToken');
+                    if (jwtToken) {
+                        showAlert('React app is already authenticated. Redirecting to main app...', 'info');
+                        setTimeout(() => {
+                            window.location.href = 'index.html';
+                        }, 2000);
+                        return true;
+                    }
+                }
+            } catch (error) {
+                console.log('Error checking React app auth:', error);
+            }
+            return false;
+        }
+        
+        // Check React app auth status after a short delay
+        setTimeout(checkReactAppAuth, 1000);
+        
+        // Add test backend functionality
+        document.getElementById('testBackendBtn').addEventListener('click', async function() {
+            try {
+                this.innerHTML = '<i class="bi bi-hourglass-split"></i> Testing...';
+                this.disabled = true;
+                
+                const response = await fetch('http://localhost:3000/user/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        email: 'amy@ymail.com',
+                        password: 'password123'
+                    })
+                });
+                
+                if (response.ok) {
+                    showAlert('Backend connection successful! Login endpoint is working.', 'success');
+                } else {
+                    const data = await response.json();
+                    showAlert(`Backend responded with error: ${data.message}`, 'warning');
+                }
+            } catch (error) {
+                showAlert(`Backend connection failed: ${error.message}`, 'danger');
+            } finally {
+                this.innerHTML = '<i class="bi bi-wifi"></i> Test Backend Connection';
+                this.disabled = false;
+            }
+        });
+        
+        // Add clear all authentication functionality
+        document.getElementById('clearAllBtn').addEventListener('click', function() {
+            // Clear all localStorage
+            localStorage.clear();
+            
+            // Clear any sessionStorage
+            sessionStorage.clear();
+            
+            // Clear cookies (if any)
+            document.cookie.split(";").forEach(function(c) { 
+                document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+            });
+            
+            showAlert('All authentication data cleared! Please refresh the page.', 'success');
+            
+            // Hide logout button
+            document.getElementById('logoutBtn').style.display = 'none';
+            
+            // Clear form fields
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+            
+            // Reload page after 2 seconds
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
+        });
+    </script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

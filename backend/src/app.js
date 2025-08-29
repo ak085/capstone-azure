@@ -6,6 +6,7 @@
 // INCLUDES
 //////////////////////////////////////////////////////
 const express = require('express');
+const path = require('path');
 
 var cors= require('cors');
 //////////////////////////////////////////////////////
@@ -27,6 +28,9 @@ app.use(cors(corsOptions));
 //////////////////////////////////////////////////////
 app.use(express.json());
 app.use(express.urlencoded({extended:false}));
+
+// Serve static files from the public directory
+app.use('/images', express.static(path.join(__dirname, '../public/images')));
 
 //////////////////////////////////////////////////////
 // SETUP ROUTES

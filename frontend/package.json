@@ -1,9 +1,10 @@
 {
     "type": "module",
     "scripts": {
-        "start": "npm run build -- --watch",
+        "start": "npm run build && http-server -p 8000 -o",
         "dev": "npm run build && http-server -p 8000 -o",
         "build": "esbuild ./src/index.js --loader:.js=jsx --outdir=dist --jsx=automatic --bundle",
+        "build:watch": "npm run build -- --watch",
         "test": "cross-env NODE_OPTIONS=--experimental-vm-modules jest"
     },
     "devDependencies": {
