@@ -7,6 +7,12 @@ const validateMiddleware = require("../middlewares/validateMiddleware");
 const bcryptMiddleware = require("../middlewares/bcryptMiddleware");
 const plainPasswordMiddleware = require("../middlewares/plainPasswordMiddleware");
 
+// public web service to login, submit credentials to get return json web token
+router.post("/login", validateMiddleware.validateUserLogin, userController.loginUser, bcryptMiddleware.comparePassword, jwtMiddleware.generateToken, jwtMiddleware.sendToken);
+
+// public web service to register new default role user and get return json web token 
+router.post("/register", validateMiddleware.validateUserRegister, userController.checkEmailExist, bcryptMiddleware.hashPassword, userController.register, jwtMiddleware.generateToken, jwtMiddleware.sendToken);
+
 // admin web service to get user by email require jwt, get all fields except password
 router.get('/', jwtMiddleware.verifyToken, jwtMiddleware.verifyAdmin, userController.getUserByEmail);
 router.get('/all', jwtMiddleware.verifyToken, jwtMiddleware.verifyAdmin, userController.getEveryUser);
@@ -20,11 +26,5 @@ router.put('/update', jwtMiddleware.verifyToken, jwtMiddleware.verifyAdmin, bcry
 
 // admin web service to delete user require jwt
 router.delete('/delete', jwtMiddleware.verifyToken, jwtMiddleware.verifyAdmin, userController.deleteUser);
-
-// public web service to login, submit credentials to get return json web token
-router.post("/login", validateMiddleware.validateUserLogin, userController.loginUser, bcryptMiddleware.comparePassword, jwtMiddleware.generateToken, jwtMiddleware.sendToken);
-
-// public web service to register new default role user and get return json web token 
-router.post("/register", validateMiddleware.validateUserRegister, userController.checkEmailExist, bcryptMiddleware.hashPassword, userController.register, jwtMiddleware.generateToken, jwtMiddleware.sendToken);
 
 module.exports = router;
