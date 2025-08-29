@@ -14,9 +14,14 @@ var cors= require('cors');
 //////////////////////////////////////////////////////
 const app = express();
 
-// CORS - Allow requests from frontend on port 8000
+// CORS - Allow requests from frontend on port 8000 and Azure Static Web Apps
 const corsOptions = {
-    origin: ['http://localhost:8000', 'http://127.0.0.1:8000'],
+    origin: [
+        'http://localhost:8000', 
+        'http://127.0.0.1:8000',
+        'https://*.azurestaticapps.net',
+        'https://*.azurewebsites.net'
+    ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
