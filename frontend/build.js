@@ -32,6 +32,11 @@ async function buildApp() {
       fs.cpSync('./css', './dist/css', { recursive: true });
     }
 
+    // Copy config file
+    if (fs.existsSync('./Capstone_config.js')) {
+      fs.copyFileSync('./Capstone_config.js', './dist/Capstone_config.js');
+    }
+
     // Copy images directory
     if (fs.existsSync('./images')) {
       if (!fs.existsSync('./dist/images')) {

@@ -137,7 +137,7 @@
                 console.log('Attempting login with:', { email, password: '***' });
                 
                 // Make API call to your existing backend using config
-                const config = await import('./src/config/Capstone_config.js');
+                const config = await import('./config/Capstone_config.js');
                 const backendURL = config.default().userLoginEP;
                 
                 const response = await fetch(backendURL, {
