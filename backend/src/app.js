@@ -20,7 +20,8 @@ const corsOptions = {
         'http://localhost:8000', 
         'http://127.0.0.1:8000',
         'https://*.azurestaticapps.net',
-        'https://*.azurewebsites.net'
+        'https://*.azurewebsites.net',
+        'https://blue-hill-0813d3f00.1.azurestaticapps.net'
     ],
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
