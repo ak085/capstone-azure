@@ -1,7 +1,12 @@
 
 export default function Capstone_config() {
+    // Automatically detect local vs Azure environment
+    const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    
     // change the base URL here and all places refering to endpoints from this file will use it
-    const backendBaseURL = "https://capstone-azure-bkg4ewd4fnfrdfgu.eastasia-01.azurewebsites.net";
+    const backendBaseURL = isLocal 
+        ? "http://localhost:8181"  // Local development
+        : "https://capstone-azure-bkg4ewd4fnfrdfgu.eastasia-01.azurewebsites.net"; // Azure production
 
     var config = {
         productEP: `${backendBaseURL}/product`,
